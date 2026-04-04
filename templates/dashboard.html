@@ -2,4 +2,6 @@
 
 {% block content %}
     <h1>Dashboard</h1>
-{% endblock %}
+    {{session ['logged_in']}}
+    {{session ['user']  }} 
+{% endblock %} 
