@@ -3,71 +3,94 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Center whole page */
+/* Body */
 body {
+    font-family: Arial, Helvetica, sans-serif;
     background: #f4f6f8;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    color: #333;
 }
 
-/* Card */
-.card {
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
-    width: 500px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+/* Container */
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 50px auto;
 }
 
-/* Title */
-.center {
+/* Headings */
+h1 {
     text-align: center;
     margin-bottom: 20px;
+    color: #222;
 }
 
-/* FORM LAYOUT */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+/* Card (for dashboard box) */
+.card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* Row for horizontal fields */
-.form-row {
-    display: flex;
-    gap: 10px;
+/* User info */
+.user-info {
+    margin-top: 15px;
+    line-height: 1.6;
 }
 
-/* Each field container */
-.form-group {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Inputs */
-.field {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
-}
-
-/* Button */
-.btn {
-    padding: 10px;
-    background: #007bff;
-    color: white;
+/* Buttons */
+button, .btn {
+    display: inline-block;
+    padding: 10px 15px;
     border: none;
-    border-radius: 5px;
+    background: #4CAF50;
+    color: white;
+    border-radius: 6px;
     cursor: pointer;
+    transition: 0.3s;
 }
 
-.btn:hover {
-    background: #0056b3;
+button:hover, .btn:hover {
+    background: #45a049;
+}
+
+/* Error message */
+.error {
+    background: #ffdddd;
+    color: #d8000c;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.error--hidden {
+    display: none;
+}
+
+/* Form styling */
+form {
+    margin-top: 20px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+/* Logout link */
+.logout {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    color: #555;
+    text-decoration: none;
+}
+
+.logout:hover {
+    color: #000;
 }

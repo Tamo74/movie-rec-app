@@ -1,7 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Dashboard</h1>
-    {{session ['logged_in']}}
-    {{session ['user']  }} 
-{% endblock %} 
+<div class="container">
+    <div class="card">
+        <h1>Dashboard</h1>
+
+        <div class="user-info">
+            <p><strong>Logged in:</strong> {{ session['logged_in'] }}</p>
+            <p><strong>User:</strong></p>
+            <pre>{{ session['user'] | tojson }}</pre>
+        </div>
+
+        <a href="/user/signout" class="logout">Logout</a>
+    </div>
+</div>
+{% endblock %}

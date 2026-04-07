@@ -5,6 +5,7 @@ import pymongo
 
 app = Flask(__name__)
 app.secret_key=b'\xda\xfb\x01\xc3vc#\x9a\xc7\xb0\x7fk\xadUp\x06'
+
 # dabaseses
 
 client = pymongo.MongoClient('localhost', 27017)
