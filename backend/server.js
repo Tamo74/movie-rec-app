@@ -32,6 +32,19 @@ app.post("/api/admin/movies", (req, res) => {
     res.status(201).json(newMovie);
 })
 
+//UPDATE movie - admin
+app.put("/api/admin/movies/:id", (req, res) => {
+    const id = parseInt(req.params.id);
+    const movie = adminMovies.find(m => m.id === id);
+    if (!movie) {
+        return res.status(404).json({ error: "Movie not found" });
+    }
+    movie.title = req.body.title ?? movie.title;
+    movie.genre = req.body.genre ?? movie.genre;
+    movie.year = req.body.year ?? movie.year;
+
+    res.json(movie);
+});
 
 
 app.get("/", (req, res) => {
