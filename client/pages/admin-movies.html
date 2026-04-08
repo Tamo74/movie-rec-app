@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Movies</title>
+</head>
+<body>
+    <h1>Admin Movies Manager</h1>
+    
+    <button onclick="loadMovies()">Load Movies</button>
+
+    <ul id="movieList"></ul>
+
+    <script>
+        async function loadMovies() {
+            const response = await fetch("http://localhost:3000/api/admin/movies");
+            const movies = await response.json();
+            const list = document.getElementById("movieList");
+
+            list.innerHTML = "";
+
+            movies.forEach(movie => {
+                const li = document.createElement("li");
+                li.textContent = movie.title + " (" + movie.year + ")";
+                list.appendChild(li);
+            });
+        }
+    </script>
+</body>
+</html>
