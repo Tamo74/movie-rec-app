@@ -5,6 +5,13 @@
 </head>
 <body>
     <h1>Admin Movies Manager</h1>
+
+    <h2>Add Movie</h2>
+
+    <input id="title" placeholder="Movie Title">
+    <input id="year" placeholder="Release Year">
+
+    <button onclick="addMovie()">Add Movie</button>
     
     <button onclick="loadMovies()">Load Movies</button>
 
@@ -23,6 +30,21 @@
                 li.textContent = movie.title + " (" + movie.year + ")";
                 list.appendChild(li);
             });
+        }
+
+        async function addMovie() {
+            const title = document.getElementById("title").value;
+            const year = document.getElementById("year").value;
+
+            await fetch("http://localhost:3000/api/admin/movies", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ title, year })
+            });
+
+            loadMovies();
         }
     </script>
 </body>
