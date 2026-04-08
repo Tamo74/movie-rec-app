@@ -27,7 +27,7 @@
 
             movies.forEach(movie => {
                 const li = document.createElement("li");
-                li.textContent = movie.title + " (" + movie.year + ")";
+                li.innerHTML = movie.title + " (" + movie.year + ")" + '<button onclick="deleteMovie(\'' + movie._id + '\')">Delete</button>';
                 list.appendChild(li);
             });
         }
@@ -42,6 +42,14 @@
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({ title, year })
+            });
+
+            loadMovies();
+        }
+
+        async function deleteMovie(id) {
+            await fetch("http://localhost:3000/api/admin/movies/" + id, {
+                method: "DELETE"
             });
 
             loadMovies();
