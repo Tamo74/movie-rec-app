@@ -46,6 +46,23 @@ app.put("/api/admin/movies/:id", (req, res) => {
     res.json(movie);
 });
 
+//DELETE movie - admin
+app.delete("/api/admin/movies/:id", (req, res) => {
+    const id = parseInt(req.params.id);
+    const index = adminMovies.findIndex(m => m.id === id);
+    if (index === -1) {
+        return res.status(404).json({ error: "Movie not found" });
+    }
+
+    const deletedMovie = adminMovies.splice(index, 1);
+
+    res.json({
+        message: "Movie deleted",
+        movie: deletedMovie
+    });
+});
+
+
 
 app.get("/", (req, res) => {
     res.send("Server is running");
