@@ -9,6 +9,10 @@ const PORT = 3000;
 
 const API_KEY = "ef0446eee648d392883577d34d4496e7";
 
+// temp movie DB for admin CRUD
+let adminMovies = [];
+let nextId = 1;
+
 app.get("/", (req, res) => {
     res.send("Server is running");
 });
