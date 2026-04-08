@@ -1,6 +1,7 @@
-from flask import Flask, render_template, redirect, session 
+from flask import Flask, render_template, redirect, session, jsonify 
 from functools import wraps
 import pymongo
+
 
 
 app = Flask(__name__)
@@ -21,6 +22,18 @@ def login_required(f):
         else:
             return redirect('/')
     return wrap
+
+def admin_required(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            user = session.get("user")
+            if not user:
+                return redirect("/login")  # not logged in
+            if user.get("role") != "admin":
+                return jsonify({"error": "Admin access required"}), 403
+            return f(*args, **kwargs)
+        return decorated_function
+
         
 
 #routes
@@ -33,5 +46,17 @@ def home():
 @app.route('/dashboard/')
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    user = session.get('user')
 
+   # if user.get('role')== 'none':
+        #return ()
+        
+    if user.get('role') == 'admin':
+        return render_template('admin.html')   
+    else:
+        return render_template('dashboard.html')  
+    
+@app.route("/admin/dashboard")
+@admin_required
+def admin_dashboard():
+    return render_template("admin.html")

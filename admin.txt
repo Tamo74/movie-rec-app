@@ -1,0 +1,7 @@
+from app import db
+
+db.user.update_one(
+    {"email": "admin@example.com"},
+    {"$set": {"role": "admin"}}
+)
+print("User promoted to admin")
