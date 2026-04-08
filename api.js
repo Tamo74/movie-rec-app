@@ -45,3 +45,8 @@ export const api = {
         return response.json();
     }
 };
+
+export async function getUpcomingMovies() {
+        const res = await fetch("http://localhost:3000/api/movies/upcoming");
+        return res.json();
+    }
