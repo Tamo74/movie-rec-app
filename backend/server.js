@@ -13,6 +13,13 @@ const API_KEY = "ef0446eee648d392883577d34d4496e7";
 let adminMovies = [];
 let nextId = 1;
 
+//GET admin movies
+app.get("/api/admin/movies", (req, res) => {
+    res.json(adminMovies);
+});
+
+
+
 app.get("/", (req, res) => {
     res.send("Server is running");
 });
