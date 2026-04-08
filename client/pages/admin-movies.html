@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Movies</title>
+</head>
+<body>
+    <h1>Admin Movies Manager</h1>
+
+    <h2>Add Movie</h2>
+
+    <input id="title" placeholder="Movie Title">
+    <input id="year" placeholder="Release Year">
+
+    <button onclick="addMovie()">Add Movie</button>
+    
+    <button onclick="loadMovies()">Load Movies</button>
+
+    <ul id="movieList"></ul>
+
+    <script>
+        async function loadMovies() {
+            const response = await fetch("http://localhost:3000/api/admin/movies");
+            const movies = await response.json();
+            const list = document.getElementById("movieList");
+
+            list.innerHTML = "";
+
+            movies.forEach(movie => {
+                const li = document.createElement("li");
+                li.innerHTML = movie.title + " (" + movie.year + ")" + '<button onclick="deleteMovie(\'' + movie._id + '\')">Delete</button>';
+                list.appendChild(li);
+            });
+        }
+
+        async function addMovie() {
+            const title = document.getElementById("title").value;
+            const year = document.getElementById("year").value;
+
+            await fetch("http://localhost:3000/api/admin/movies", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ title, year })
+            });
+
+            loadMovies();
+        }
+
+        async function deleteMovie(id) {
+            await fetch("http://localhost:3000/api/admin/movies/" + id, {
+                method: "DELETE"
+            });
+
+            loadMovies();
+        }
+    </script>
+</body>
+</html>
