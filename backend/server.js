@@ -19,6 +19,19 @@ app.get("/api/admin/movies", (req, res) => {
     res.json(adminMovies);
 });
 
+// CREATE new movie - admin
+app.post("/api/admin/movies", (req, res) => {
+    const newMovie = {
+        id: nextId++,
+        title: req.body.title,
+        genre: req.body.genre,
+        year: req.body.year,
+    };
+    adminMovies.push(newMovie);
+
+    res.status(201).json(newMovie);
+})
+
 
 
 app.get("/", (req, res) => {
