@@ -13,20 +13,6 @@ app.get("/", (req, res) => {
     res.send("Server is running");
 });
 
-app.get("/api/movies/trending", async (req, res) => {
-    try {
-        const response = await axios.get(
-            `https://api.themoviedb.org/3/trending/movie/day?api_key=${API_KEY}`
-        );
-
-        res.json(response.data.results);
-
-    } catch (error) {
-        console.error(error);
-            res.status(500).json({ error: "Failed to fetch movies" });
-        }
-});
-
 app.get("/api/movies/upcoming", async (req, res) => {
     try {
         const response = await axios.get(
@@ -48,5 +34,5 @@ app.get("/api/movies/upcoming", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log('Server running on port ${PORT}');
+    console.log(`Server running on port ${PORT}`);
 });
