@@ -16,7 +16,7 @@ def signup():
 
     # whitelist roles so nobody can POST role=superuser etc.
     if role not in ('client', 'admin'):
-        role = 'client'
+        return jsonify({"error": "Choose a role"}), 400
 
     if not name or not email or not password:
         return jsonify({"error": "All fields are required"}), 400

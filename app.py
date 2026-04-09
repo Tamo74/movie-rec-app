@@ -40,8 +40,8 @@ def admin_required(f):
 from user import routes
 
 @app.route('/')
-def home():
-    return render_template('home.html')
+def register():
+    return render_template('register.html')
 
 @app.route('/dashboard/')
 @login_required
