@@ -27,7 +27,7 @@
 
             movies.forEach(movie => {
                 const li = document.createElement("li");
-                li.innerHTML = movie.title + " (" + movie.year + ")" + '<button onclick="deleteMovie(\'' + movie._id + '\')">Delete</button>';
+                li.innerHTML = movie.title + " (" + movie.year + ")" + '<button onclick="deleteMovie(\'' + movie.id + '\')">Delete</button>';
                 list.appendChild(li);
             });
         }
