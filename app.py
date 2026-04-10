@@ -54,7 +54,7 @@ def dashboard():
     if user.get('role') == 'admin':
         return render_template('admin.html')   
     else:
-        return render_template('dashboard.html')  
+        return render_template('Home.html')  
     
 @app.route("/admin/dashboard")
 @admin_required
