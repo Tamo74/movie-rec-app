@@ -10,6 +10,7 @@ export function renderHeader(user = null) {
             <a href="/" class="nav-link">Home</a>
             <a href="/trending" class="nav-link">Trending</a>
             <a href="/recommendations" class="nav-link">For You</a>
+            <a href="/settings" class="nav-link">Settings</a>
             ${user ? `
                 <div class="user-menu">
                     <span class="username">${user.username}</span>
@@ -20,7 +21,7 @@ export function renderHeader(user = null) {
                 </div>
             ` : `
                 <a href="/login" class="nav-link">Login</a>
-                <a href="/register" class="nav-link signup">Sign Up</a>
+                <a href="/register" class="nav-link signup">Sign Up</a> 
             `}
         </nav>
     `;

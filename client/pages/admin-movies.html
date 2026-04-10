@@ -2,22 +2,88 @@
 <html>
 <head>
     <title>Admin Movies</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-    <h1>Admin Movies Manager</h1>
+    <h1 style="text-align: center;">Movie Recommendation Platform</h1>
 
-    <h2>Add Movie</h2>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/home">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="/admin">Admin Movies</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-    <input id="title" placeholder="Movie Title">
-    <input id="year" placeholder="Release Year">
+    <div class="container mt-4">
 
-    <button onclick="addMovie()">Add Movie</button>
-    
-    <button onclick="loadMovies()">Load Movies</button>
+    <h2>Admin Movie Manager</h2>
 
-    <ul id="movieList"></ul>
+    <!-- add movie -->
+    <h4>Add Movie</h4>
+    <div class="row g-2 mb-3">
+      <div class="col">
+        <input id="title" class="form-control" placeholder="Movie Title">
+      </div>
+      <div class="col">
+        <input id="genre" class="form-control" placeholder="Genre">
+      </div>
+      <div class="col">
+        <input id="year" class="form-control" placeholder="Year">
+      </div>
+      <div class="col">
+        <button onclick="addMovie()" class="btn btn-success">Add Movie</button>
+      </div>
+    </div>
+
+    <!-- edit movie (hidden until you click edit) -->
+    <div id="editCard" style="display:none;" class="mb-3 p-3 border rounded">
+      <h4>Edit Movie</h4>
+      <input type="hidden" id="editId">
+      <div class="row g-2">
+        <div class="col">
+          <input id="editTitle" class="form-control" placeholder="Movie Title">
+        </div>
+        <div class="col">
+          <input id="editGenre" class="form-control" placeholder="Genre">
+        </div>
+        <div class="col">
+          <input id="editYear" class="form-control" placeholder="Year">
+        </div>
+        <div class="col">
+          <button onclick="saveEdit()" class="btn btn-warning">Save</button>
+          <button onclick="cancelEdit()" class="btn btn-secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- movie list -->
+    <h4>Movies <button onclick="loadMovies()" class="btn btn-outline-success btn-sm">Refresh</button></h4>
+    <div id="movieList" class="row g-3">
+      <p>Loading...</p>
+    </div>
+
+  </div>
 
     <script>
+        // Load movies when page opens
+        window.onload = () => {
+        loadMovies();
+        };
+
         async function loadMovies() {
             const response = await fetch("http://localhost:3000/api/admin/movies");
             const movies = await response.json();
@@ -25,27 +91,81 @@
 
             list.innerHTML = "";
 
+            if (movies.length === 0) {
+                list.innerHTML = "<p>No movies yet</p>";
+                return;
+            }
+
             movies.forEach(movie => {
-                const li = document.createElement("li");
-                li.innerHTML = movie.title + " (" + movie.year + ")" + '<button onclick="deleteMovie(\'' + movie.id + '\')">Delete</button>';
-                list.appendChild(li);
-            });
+            const col = document.createElement("div");
+            col.className = "col-md-4";
+            col.innerHTML = `
+            <div class="card h-100">
+                <div class="card-body">
+                <h5 class="card-title">${movie.title}</h5>
+                <p class="card-text">${movie.genre || "No genre"} - ${movie.year || "Unknown year"}</p>
+                </div>
+                <div class="card-footer">
+                <button onclick="openEdit('${movie._id}', '${movie.title}', '${movie.genre || ''}', '${movie.year || ''}')"
+                    class="btn btn-warning btn-sm">Edit</button>
+                <button onclick="deleteMovie('${movie._id}')"
+                    class="btn btn-danger btn-sm">Delete</button>
+                </div>
+            </div>
+            `;
+            list.appendChild(col);
+        });
         }
 
         async function addMovie() {
             const title = document.getElementById("title").value;
+            const genre = document.getElementById("genre").value;
             const year = document.getElementById("year").value;
+
+            if (!title) {
+                alert("Enter a title.");
+                return;
+            }
 
             await fetch("http://localhost:3000/api/admin/movies", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ title, year })
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ title, genre, year })
             });
 
+            // clear inputs
+            document.getElementById("title").value = "";
+            document.getElementById("genre").value = "";
+            document.getElementById("year").value = "";
+
             loadMovies();
-        }
+            }
+
+        function openEdit(id, title, genre, year) {
+            document.getElementById("editCard").style.display = "block";
+            document.getElementById("editId").value = id;
+            document.getElementById("editTitle").value = title;
+            document.getElementById("editGenre").value = genre;
+            document.getElementById("editYear").value = year;
+            }
+
+        function cancelEdit() {
+            document.getElementById("editCard").style.display = "none";
+            }
+
+        async function saveEdit() {
+            const id = document.getElementById("editId").value;
+            const title = document.getElementById("editTitle").value;
+            const genre = document.getElementById("editGenre").value;
+            const year = document.getElementById("editYear").value;
+             await fetch("http://localhost:3000/api/admin/movies/" + id, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ title, genre, year })                });
+
+                document.getElementById("editCard").style.display = "none";
+                loadMovies();
+                }
 
         async function deleteMovie(id) {
             await fetch("http://localhost:3000/api/admin/movies/" + id, {

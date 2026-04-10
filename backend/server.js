@@ -3,6 +3,7 @@ import axios from "axios";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
+import { MongoClient, ObjectId } from "mongodb";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,58 +16,75 @@ const PORT = 3000;
 
 const API_KEY = "ef0446eee648d392883577d34d4496e7";
 
-// temp movie DB for admin CRUD
-let adminMovies = [];
-let nextId = 1;
+// MongoDB system for admin movies
+const mongoClient = new MongoClient("mongodb://localhost:27017");
+let db;
 
-//GET admin movies
-app.get("/api/admin/movies", (req, res) => {
-    res.json(adminMovies);
+mongoClient.connect().then(() => {
+    db = mongoClient.db("userLoginSystem");
+    console.log("Connected to MongoDB");
+});
+
+// GET admin movies
+app.get("/api/admin/movies", async (req, res) => {
+    try {
+        const movies = await db.collection("movies").find().toArray();
+        res.json(movies);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to fetch movies" });
+    }
 });
 
 // CREATE new movie - admin
-app.post("/api/admin/movies", (req, res) => {
-    const newMovie = {
-        id: nextId++,
-        title: req.body.title,
-        genre: req.body.genre,
-        year: req.body.year,
-    };
-    adminMovies.push(newMovie);
-
-    res.status(201).json(newMovie);
-})
+app.post("/api/admin/movies", async (req, res) => {
+    try {
+        const newMovie = {
+            title: req.body.title,
+            genre: req.body.genre,
+            year: req.body.year,
+        };
+        const result = await db.collection("movies").insertOne(newMovie);
+        res.status(201).json({ ...newMovie, _id: result.insertedId });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to create movie" });
+    }
+});  
 
 //UPDATE movie - admin
-app.put("/api/admin/movies/:id", (req, res) => {
-    const id = parseInt(req.params.id);
-    const movie = adminMovies.find(m => m.id === id);
-    if (!movie) {
-        return res.status(404).json({ error: "Movie not found" });
+app.put("/api/admin/movies/:id", async (req, res) => {
+    try {
+        const id = new ObjectId(req.params.id);
+        const result = await db.collection("movies").findOneAndUpdate(
+            { _id: id },
+            { $set: {
+                title: req.body.title,
+                genre: req.body.genre,
+                year: req.body.year,
+            }},
+            { returnDocument: "after" }
+        );
+        if (!result) return res.status(404).json({ error: "Movie not found" });
+        res.json(result);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to update movie" });
     }
-    movie.title = req.body.title ?? movie.title;
-    movie.genre = req.body.genre ?? movie.genre;
-    movie.year = req.body.year ?? movie.year;
+}); 
 
-    res.json(movie);
-});
-
-//DELETE movie - admin
-app.delete("/api/admin/movies/:id", (req, res) => {
-    const id = parseInt(req.params.id);
-    const index = adminMovies.findIndex(m => m.id === id);
-    if (index === -1) {
-        return res.status(404).json({ error: "Movie not found" });
+// DELETE movie - admin
+app.delete("/api/admin/movies/:id", async (req, res) => {
+    try {
+        const id = new ObjectId(req.params.id);
+        const result = await db.collection("movies").findOneAndDelete({ _id: id });
+        if (!result) return res.status(404).json({ error: "Movie not found" });
+        res.json({ message: "Movie deleted", movie: result });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to delete movie" });
     }
-
-    const deletedMovie = adminMovies.splice(index, 1);
-
-    res.json({
-        message: "Movie deleted",
-        movie: deletedMovie
-    });
 });
-
 
 
 app.get("/", (req, res) => {
