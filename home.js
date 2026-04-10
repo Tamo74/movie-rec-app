@@ -42,7 +42,7 @@ async function loadCarousel() {
 
         carouselInner.innerHTML = "";
 
-        movies.slice(0, 3).forEach((movie, index) => {
+        movies.slice(0, 5).forEach((movie, index) => {
             const isActive = index === 0 ? "active" : "";
 
             const slide = document.createElement("div");
@@ -66,7 +66,7 @@ async function loadCarousel() {
     }
 }
 
-// display search results using moviecard.js
+// display search results using moviecards
 function displayMovies(movies) {
     moviesContainer.innerHTML = "";
 
@@ -78,6 +78,45 @@ function displayMovies(movies) {
     movies.forEach(movie => {
         const card = createMovieCard(toMovieCardData(movie));
         moviesContainer.appendChild(card);
+    });
+}
+
+// genre buttons
+function setupGenreButtons() {
+    const genreResults = document.getElementById('genreResults');
+    let activeBtn = null;
+
+    document.querySelectorAll('.genre-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            // click same button again to collapse
+            if (activeBtn === btn) {
+                btn.classList.remove('active');
+                genreResults.innerHTML = '';
+                activeBtn = null;
+                return;
+            }
+
+            document.querySelectorAll('.genre-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeBtn = btn;
+
+            genreResults.innerHTML = '<p class="text-muted">Loading...</p>';
+
+            try {
+                const res = await fetch(`/api/movies/genre/${btn.dataset.id}`);
+                const movies = await res.json();
+                genreResults.innerHTML = '';
+
+                movies.forEach(movie => {
+                    const card = createMovieCard(toMovieCardData(movie));
+                    genreResults.appendChild(card);
+                });
+
+                genreResults.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } catch (err) {
+                genreResults.innerHTML = '<p class="text-muted">Failed to load movies.</p>';
+            }
+        });
     });
 }
 

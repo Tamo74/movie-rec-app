@@ -20,12 +20,40 @@ export function renderHeader(user = null) {
                     </div>
                 </div>
             ` : `
-                <a href="/login" class="nav-link">Login</a>
-                <a href="/register" class="nav-link signup">Sign Up</a> 
+                <a href="/register" class="nav-link signup">Sign Out</a> 
             `}
         </nav>
+
+        <!-- SEARCH BAR -->
+        <div class="search-bar">
+            <input type="text" id="movie-search" placeholder="Search movies...">
+            <button id="search-btn">Search</button>
+        </div>
+
+        <!-- RESULTS -->
+        <div id="search-results" class="results"></div>
     `;
-    
+
+    // attach events after rendering
+    setTimeout(() => {
+        const searchBtn = header.querySelector('#search-btn');
+        const searchInput = header.querySelector('#movie-search');
+
+        searchBtn.addEventListener('click', () => {
+            searchMovies(searchInput.value);
+        });
+
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchMovies(searchInput.value);
+            }
+        });
+    }, 0);
+
     return header;
 }
 
+function searchMovies(query) {
+    const q = query.trim();
+    if (q) window.location.href = `/?q=${encodeURIComponent(q)}`;
+}

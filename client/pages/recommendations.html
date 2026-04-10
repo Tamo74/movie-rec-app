@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>For You - MovieRecommender</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/main.css">
+  <link rel="stylesheet" href="/recommendations.css">
+</head>
+<body>
+
+  <!-- Header injected by JS -->
+  <div class="rec-page">
+    <h1 class="rec-heading">Your Recommendations</h1>
+
+    <div class="rec-columns">
+
+      <!-- your saved movies list -->
+      <div class="rec-col">
+        <h2 class="rec-col-title">Your Saves</h2>
+        <div id="savesList" class="rec-list">
+          <p class="rec-empty">No saved movies yet.</p>
+        </div>
+      </div>
+
+      <!-- recs based on genre -->
+      <div class="rec-col">
+        <h2 class="rec-col-title">Based on genre</h2>
+        <div id="genreList" class="rec-list">
+          <p class="rec-empty">Save a movie to get recommendations.</p>
+        </div>
+      </div>
+
+      <!-- recs based on release year -->
+      <div class="rec-col">
+        <h2 class="rec-col-title">Based on release year</h2>
+        <div id="yearList" class="rec-list">
+          <p class="rec-empty">Save a movie to get recommendations.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="/recommendations.js" type="module"></script>
+</body>
+</html>
