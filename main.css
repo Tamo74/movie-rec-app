@@ -235,3 +235,28 @@
     gap: 16px;
     padding: 16px 8px;
 }
+
+/* Save movie button */
+.save-movie-btn {
+    width: 100%;
+    padding: 10px 0;
+    border: 2px solid #1a1a2e;
+    border-radius: 8px;
+    background: #fff;
+    color: #1a1a2e;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.save-movie-btn:hover {
+    background: #1a1a2e;
+    color: #fff;
+}
+
+.save-movie-btn.saved {
+    background: #e94560;
+    border-color: #e94560;
+    color: #fff;
+}
