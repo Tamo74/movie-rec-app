@@ -48,13 +48,11 @@ def register():
 def dashboard():
     user = session.get('user')
 
-   # if user.get('role')== 'none':
-        #return ()
         
     if user.get('role') == 'admin':
         return render_template('admin.html')   
     else:
-        return render_template('dashboard.html')  
+        return render_template('client/pages/Home.html.html')  
     
 @app.route("/admin/dashboard")
 @admin_required
