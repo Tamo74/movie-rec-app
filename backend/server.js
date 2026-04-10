@@ -1,6 +1,11 @@
 import express from "express";
 import axios from "axios";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(cors());
@@ -88,6 +93,44 @@ app.get("/api/movies/upcoming", async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
+app.get("/api/movies/search", async (req, res) => {
+    const { query } = req.query;
+    if (!query) return res.status(400).json({ error: "Query is required" });
+    try {
+        const response = await axios.get(
+            `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}`
+        );
+        res.json(response.data.results);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to search movies" });
+    }
+});
+
+// Serve static frontend files
+app.use(express.static(path.join(__dirname, "..")));
+
+// Serve client pages
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "..", "client", "pages", "Home.html"));
+});
+
+app.get("/home", (req, res) => {
+    res.sendFile(path.join(__dirname, "..", "client", "pages", "Home.html"));
+});
+
+app.get("/login", (req, res) => {
+    res.sendFile(path.join(__dirname, "..", "client", "pages", "Login.html"));
+});
+
+app.get("/dashboard", (req, res) => {
+    res.sendFile(path.join(__dirname, "..", "client", "pages", "Dashboard.html"));
+});
+
+app.get("/admin", (req, res) => {
+    res.sendFile(path.join(__dirname, "..", "client", "pages", "admin-movies.html"));
+});
+
+app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on port ${PORT}`);
 });
