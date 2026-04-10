@@ -93,17 +93,16 @@ app.get("/", (req, res) => {
 
 app.get("/api/movies/upcoming", async (req, res) => {
     try {
-        const response = await axios.get(
-            `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}`
-        );
-
         const today = new Date().toISOString().split("T")[0];
+        const future = new Date();
+        future.setMonth(future.getMonth() + 4);
+        const futureDate = future.toISOString().split("T")[0];
 
-        const filtered = response.data.results.filter(movie =>
-            movie.release_date > today
+        const response = await axios.get(
+            `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&primary_release_date.gte=${today}&primary_release_date.lte=${futureDate}&sort_by=release_date.asc&page=1`
         );
 
-        res.json(filtered);
+        res.json(response.data.results);
 
     } catch (error) {
         console.error(error);
